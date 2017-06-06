@@ -136,8 +136,89 @@ extension HCCardHeaderView:HCCardContentViewDelegate {
 
 ```
 * UICollectionView的自定义布局
- > 自定义布局的实现步骤
- 1.// MARK: - 准备布局
- 2.// MARK: - 返回布局
- 3.// MARK: - 布局作用范围
+```swift
+自定义布局的实现步骤
+1.// MARK: - 准备布局
+extension HCCollectionViewFlowLayout {
+    override func prepare() {
+        super.prepare()
+        let attribute = UICollectionViewLayoutAttributes(forCellWith: indexP)
+        // 准备需要数量的UICollectionViewLayoutAttributes
+        // TODO:
+    }
+}
+
+2.// MARK: - 返回布局
+extension HCCollectionViewFlowLayout {
+   override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+       return attributes
+   }
+}
+
+3.// MARK: - 布局作用范围
+extension HCCollectionViewFlowLayout{
+    override var collectionViewContentSize: CGSize {
+        return CGSize(width: 0, height: layoutMaxY)
+    }
+}
+ ```
 * 表情键盘的联动效果使用了代理，闭包两种方式来实现
+```swift
+// 1. 代理方式
+protocol HCEmojiViewContentViewDelegate: class {
+    func emojiViewContentViewDidScroll(contentView: HCEmojiViewContentView, section: Int, numberOfRows: Int, currentRow:Int)
+}
+
+// 2. 闭包方式
+typealias emojiViewDidScroll = (_ section: Int, _ numberOfRows: Int, _ currentRow:Int) -> Void
+
+// 代理调用
+func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let pageNum = Int(scrollView.contentOffset.x / collectionView.frame.width) + 1
+        var section:Int = 0
+        
+        for sectionPage in pageComponent {
+            
+            guard sectionPage.contains(pageNum) else {
+                section += 1
+                continue
+            }
+            
+            
+            let sectionPagesNum = collectionView.numberOfItems(inSection: section) / (contentStyle.emojiMinimumRows * contentStyle.emojiMinimumColumns) + 1
+            
+            emojiScroll?(section,sectionPagesNum, sectionPage.index(of: pageNum)!)
+            
+            emojiViewDidScroll?.emojiViewContentViewDidScroll(contentView: self, section: section, numberOfRows: sectionPagesNum, currentRow: sectionPage.index(of: pageNum)!)
+            break
+            
+        }
+}
+
+// 代理实现
+extension HCEmojiView: HCEmojiViewContentViewDelegate {
+    func emojiViewContentViewDidScroll(contentView: HCEmojiViewContentView, section: Int, numberOfRows: Int, currentRow: Int) {
+        headerView.changeItem = {() -> Int in
+            return section
+        }
+
+        pageControl.numberOfPages = numberOfRows
+        pageControl.currentPage = currentRow
+    }
+}
+
+// 闭包实现
+weak var weakSelf = self
+
+emojiContentView.emojiScroll = { section, numberOfRows, currentRow in
+    weakSelf?.headerView.changeItem = {() -> Int in
+        return section
+    }
+    
+    weakSelf?.pageControl.numberOfPages = numberOfRows
+    weakSelf?.pageControl.currentPage = currentRow
+}
+
+
+```
