@@ -82,7 +82,7 @@ extension HCCardContentView:UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         originOffsetX = scrollView.contentOffset.x
     }
-    
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let scrollOffsetX = scrollView.contentOffset.x
@@ -95,16 +95,19 @@ extension HCCardContentView:UICollectionViewDelegate {
             return
         }
         
+        // 计算起始位置，进度
         if scrollOffsetX > originOffsetX { // 左滑
-            beginIndex = Int(originOffsetX / scrollWidth)
-            toIndex = beginIndex + 1
-            progress = (scrollOffsetX - originOffsetX) / scrollWidth
+            beginIndex = Int(scrollOffsetX / scrollWidth)
+            toIndex = beginIndex == childVCs.count - 1 ? beginIndex : beginIndex + 1
+            progress = (scrollOffsetX - CGFloat(beginIndex) * scrollWidth) / scrollWidth
         } else { // 右滑
-            beginIndex = Int(originOffsetX / scrollWidth)
-            toIndex = beginIndex - 1
-            progress = (originOffsetX - scrollOffsetX) / scrollWidth
+            toIndex = Int(scrollOffsetX / scrollWidth)
+            beginIndex = toIndex + 1
+            progress = (CGFloat(beginIndex) * scrollWidth - scrollOffsetX) / scrollWidth
         }
         
+        
+        // 通知代理，达到联动效果
         cardContentViewDelegate?.cardContentView(cardContentView: self, beginIndex: beginIndex, toIndex: toIndex, progress: progress)
     }
 }
