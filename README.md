@@ -136,5 +136,8 @@ extension HCCardHeaderView:HCCardContentViewDelegate {
 
 ```
 * UICollectionView的自定义布局
- 
+ > 自定义布局的实现步骤
+ 1.// MARK: - 准备布局
+ 2.// MARK: - 返回布局
+ 3.// MARK: - 布局作用范围
 * 表情键盘的联动效果使用了代理，闭包两种方式来实现
