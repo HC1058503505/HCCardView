@@ -71,13 +71,7 @@ extension HCEmojiView {
             weakSelf?.pageControl.currentPage = currentRow
         }
         
-        emojiContentView.emojiSelected = { numberOfPages,currentPage in
-            weakSelf?.pageControl.numberOfPages = numberOfPages
-            weakSelf?.pageControl.currentPage = 0
-        
-        }
 //        emojiContentView.emojiViewDidScroll = self
-//        emojiContentView.emojiViewDidSelected = self
         headerView.cardHeaderViewDelegate = emojiContentView
     }
 }
@@ -90,11 +84,6 @@ extension HCEmojiView {
 //
 //        pageControl.numberOfPages = numberOfRows
 //        pageControl.currentPage = currentRow
-//    }
-//    
-//    func emojiViewContentViewDidSelected(contentView: HCEmojiViewContentView, numberOfPages: Int, currentPage: Int) {
-//        pageControl.numberOfPages = numberOfPages
-//        pageControl.currentPage = 0
 //    }
 //}
 

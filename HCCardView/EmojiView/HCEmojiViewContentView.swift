@@ -10,12 +10,10 @@ import UIKit
 
 protocol HCEmojiViewContentViewDelegate: class {
     func emojiViewContentViewDidScroll(contentView: HCEmojiViewContentView, section: Int, numberOfRows: Int, currentRow:Int)
-    func emojiViewContentViewDidSelected(contentView: HCEmojiViewContentView, numberOfPages: Int, currentPage: Int)
 }
 
 
 typealias emojiViewDidScroll = (_ section: Int, _ numberOfRows: Int, _ currentRow:Int) -> Void
-typealias emojiViewDidSelected = (_ numberOfPages: Int, _ currentPage: Int) -> Void
 
 class HCEmojiViewContentView: UIView {
     
@@ -24,13 +22,11 @@ class HCEmojiViewContentView: UIView {
     weak var emojiViewDidSelected: HCEmojiViewContentViewDelegate?
     
     var emojiScroll:emojiViewDidScroll?
-    var emojiSelected:emojiViewDidSelected?
     
     
     fileprivate var contentStyle: HCCardViewStyle
     fileprivate var titles: [String]
     fileprivate var sectionsNumber: [Int]
-    fileprivate var originOffsetX:CGFloat = 0
     
     fileprivate lazy var pageComponent: [[Int]] = {
         let sections = self.collectionView.numberOfSections
@@ -109,14 +105,7 @@ extension HCEmojiViewContentView:UICollectionViewDelegate, UICollectionViewDataS
         cell.backgroundColor = UIColor.randomColor()
         return cell
     }
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        originOffsetX = scrollView.contentOffset.x
-    }
-    
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        
-    }
+
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -158,9 +147,6 @@ extension HCEmojiViewContentView: HCCardHeaderViewDelegate {
     }
     
     func cardHeaderView(headerView: HCCardHeaderView, currentIndex: Int) {
-        
-        let pagesNum = collectionView.numberOfItems(inSection: currentIndex) / (emojiFlowLayout.minimumRows * emojiFlowLayout.minimumColumns) + 1
-        emojiViewDidSelected?.emojiViewContentViewDidSelected(contentView: self, numberOfPages: pagesNum, currentPage: 0)
         collectionView.setContentOffset(CGPoint(x: CGFloat(totalPage(section: currentIndex)) * collectionView.frame.width, y: 0), animated: false)
     }
 }

@@ -68,11 +68,6 @@ extension HCCardContentView {
 }
 
 extension HCCardContentView:UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-    }
-    
-    
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if cardContentViewDelegate != nil && collectionView.visibleCells.count > 0{
             cardContentViewDelegate?.cardContentView(cardContentView: self, currentIndex: (collectionView.indexPath(for: collectionView.visibleCells.last!)?.item)!)
