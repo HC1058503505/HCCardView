@@ -189,13 +189,8 @@ extension String {
     func sizeWith(contentSize:CGSize, font: UIFont) -> CGSize {
         let str = self as NSString
         do {
-            let rect = try str.boundingRect(with: contentSize, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil)
+            let rect = str.boundingRect(with: contentSize, options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSFontAttributeName : font], context: nil)
             return rect.size
-            
-        } catch {
-            
         }
-        
-        
     }
 }
