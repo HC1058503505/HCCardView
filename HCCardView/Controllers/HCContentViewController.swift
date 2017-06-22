@@ -24,6 +24,8 @@ class HCContentViewController: UIViewController {
     var controllerType:HCContentViewControllerType = .All
     var itemsCount = 30
     var collectionV:UICollectionView?
+    var anchorList:[AnchorModel] = [AnchorModel]()
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -39,6 +41,8 @@ class HCContentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        
         // Do any additional setup after loading the view.
         let layout = HCCollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 10
@@ -54,10 +58,24 @@ class HCContentViewController: UIViewController {
         collectionV.backgroundColor = UIColor.white
         collectionV.dataSource = self
         collectionV.delegate = self
-        collectionV.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCellId")
+        collectionV.register(HCCollectionViewCell.self, forCellWithReuseIdentifier: "UICollectionViewCellId")
         view.addSubview(collectionV)
         self.collectionV = collectionV
         
+        
+        HCNetWorking.request("http://116.211.167.106/api/live/aggregation?uid=133825214&interest=1", method: .GET).responseJSON { (result) in
+            guard let lives = result as? [String : Any] else {
+                return
+            }
+            guard let livesDicts = lives["lives"] else {
+                return
+            }
+            let anchorList = AnchorModel.anchorModel(lives: livesDicts as! [[String:Any]])
+            self.anchorList = anchorList
+            DispatchQueue.main.async {
+                collectionV.reloadData()
+            }
+        }
     }
 }
 
@@ -72,10 +90,13 @@ extension HCContentViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCellId", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCellId", for: indexPath) as! HCCollectionViewCell
         cell.backgroundColor = UIColor.randomColor()
         // 如果在这里修改itemsCount的值，刷新collectionView，达到一定的数据时collectionView将不能重用cell
         // 因此会出现空白情况
+        if anchorList.count > 0 && anchorList.count > indexPath.row{
+            cell.anchorModel = anchorList[indexPath.row]
+        }
         return cell
     }
 }
@@ -83,14 +104,17 @@ extension HCContentViewController: UICollectionViewDataSource {
 extension HCContentViewController:UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(HCLiveBroadcastViewController(), animated: true)
+        let anchorM = anchorList[indexPath.row]
+        let liveBroadcast = HCLiveBroadcastViewController()
+        liveBroadcast.playerURLStr = anchorM.stream_addr
+        navigationController?.pushViewController(liveBroadcast, animated: true)
     }
     
     // 底部刷新添加数据
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         if scrollView.contentOffset.y + self.collectionV!.frame.height - 108 > self.collectionV!.contentSize.height {
-            itemsCount += 30
+            itemsCount += 20
             collectionV!.reloadData()
         }
     }
@@ -103,6 +127,7 @@ extension HCContentViewController:UICollectionViewFlowLayoutDataSource {
     }
 
     func heightOfItems(in collection: UICollectionView, at indexPath: IndexPath) -> CGFloat {
-        return indexPath.row % 2 == 0 ? view.bounds.height * 0.33 : view.bounds.height * 0.17
+//        return indexPath.row % 2 == 0 ? view.bounds.height * 0.35 : view.bounds.height * 0.30
+        return view.bounds.height * 0.3
     }
 }
