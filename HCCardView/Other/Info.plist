@@ -41,5 +41,28 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string></string>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>ShortCutOpen</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>打开</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>点击打开App</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeHome</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>ShortCutShare</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>分享</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>分享“HCCardView”</string>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeShare</string>
+		</dict>
+	</array>
 </dict>
 </plist>

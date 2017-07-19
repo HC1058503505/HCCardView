@@ -157,11 +157,11 @@
 		BA6B1F7E1ED4229300CAC835 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				BA6B1F7F1ED4229300CAC835 /* AppDelegate.swift */,
 				BA6B1F811ED4229300CAC835 /* ViewController.swift */,
 				BA6B1F6F1ED4226000CAC835 /* Main.storyboard */,
 				BA6B1F721ED4226000CAC835 /* Assets.xcassets */,
 				BA6B1F741ED4226000CAC835 /* LaunchScreen.storyboard */,
-				BA6B1F7F1ED4229300CAC835 /* AppDelegate.swift */,
 				BA6B1F801ED4229300CAC835 /* Info.plist */,
 			);
 			path = Other;
