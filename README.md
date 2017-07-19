@@ -1,3 +1,4 @@
+![demo.gif](/demo.gif)
 # HCCardView
 
 > 该项目主要练习了自定义瀑布流，代理，闭包的使用。
